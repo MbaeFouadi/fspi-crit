@@ -31,6 +31,13 @@
                             {{ session()->get('success') }}
                         </div>
                         @endif
+                        @if(isset($messages))
+                            <div class="alert alert-success">
+                                {{ $messages }}
+                            </div>
+                            @endif
+                        <input type="hidden" value="{{$user->id}}" name="id">
+                        <input type="hidden" value="{{$statut}}" name="statut">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
                             @error('recherche')
@@ -38,7 +45,7 @@
                                 @enderror
                                 <div class="form-group">
                                     <label class="form-label">Recherche sur</label>
-                                    <input type="text" name="recherche" class="form-control">
+                                    <input type="text" name="recherche" class="form-control" required>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -47,7 +54,7 @@
                                 @enderror
                                 <div class="form-group">
                                     <label class="form-label">Mots clés</label>
-                                    <input type="text" name="cle" class="form-control">
+                                    <input type="text" name="cle" class="form-control" required>
                                 </div>
                             </div>
                          

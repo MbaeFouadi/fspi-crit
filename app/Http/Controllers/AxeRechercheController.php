@@ -19,8 +19,9 @@ class AxeRechercheController extends Controller
         ->where("user_id", Auth::user()->id)
         ->orderByDesc("id")
         ->first();
+        $statut = 0;
 
-        return view("add-axe-recherche",compact("user"));
+        return view("add-axe-recherche",compact("user","statut"));
         
     }
 
@@ -55,15 +56,22 @@ class AxeRechercheController extends Controller
 
         ]);
 
-        $axe=DB::table("axe_recherches")
-        ->where("user_id",Auth::user()->id)
+     
+
+        $identite=DB::table("identites")
+        ->where("id",$request->id)
         ->orderByDesc("id")
         ->first();
 
-        $identite=DB::table("identites")
-        ->where("user_id",Auth::user()->id)
-        ->orderByDesc("id")
-        ->first();
+        if($identite)
+        {
+            $axe=DB::table("axe_recherches")
+            ->where("user_id",$identite->user_id)
+            ->orderByDesc("id")
+            ->first();
+        }
+       
+       
 
         if(isset($axe) && isset($identite))
         {
@@ -76,7 +84,19 @@ class AxeRechercheController extends Controller
             ]);
         }
 
-        return back()->with("success","Enregistrement effectué avec succès");
+        if($request->statut==0)
+        {
+         return back()->with("success","Enregistrement effectué avec succès");
+
+        }
+        else
+        {
+            $user = DB::table('identites')->where("id", $request->id)->first();
+            $statut=1;
+            $messages="Enregistrement effectué avec succès";
+
+            return view ("add-axe-recherche",compact("user","statut","messages"));
+        }
     }
 
     /**
@@ -109,5 +129,22 @@ class AxeRechercheController extends Controller
     public function destroy(axe_recherche $axe_recherche)
     {
         //
+    }
+
+    public function recherche_axe_recherche()
+    {
+        return view("recherche_axe");
+    }
+
+    public function store_recherche_axe_recherche(Request $request)
+    {
+
+        $user = DB::table('identites')->where("id", $request->search)->first();
+        $statut=1;
+        if (isset($user)) {
+            return view('add-axe-recherche', compact("user","statut"));
+        } else {
+            return back()->with("success", "Ce numero n'existe pas");
+        }
     }
 }

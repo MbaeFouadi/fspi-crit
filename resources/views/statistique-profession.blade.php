@@ -1,3 +1,7 @@
+<?php
+use Illuminate\Support\Facades\DB;
+
+ ?> 
 @extends('layout.app')
 @section('content')
 <div class="container-fluid">
@@ -31,32 +35,43 @@
                                 <th>UDC</th>
                                 <th>CNDRS</th>
                                 <th>INRAPE</th>
+                                <th>Non affiliés</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($datas as $data)
+                            @php
+                                $udc=DB::table("identites")
+                                ->where("etablissement_id",1)
+                                ->where("profession_id",$data->id)
+                                ->count();
+
+                                $cndrs=DB::table("identites")
+                                ->where("etablissement_id",2)
+                                ->where("profession_id",$data->id)
+                                ->count();
+
+                                $inrape=DB::table("identites")
+                                ->where("etablissement_id",2)
+                                ->where("profession_id",$data->id)
+                                ->count();
+
+                                $non=DB::table("identites")
+                                ->where("etablissement_id",100000)
+                                ->where("profession_id",$data->id)
+                                ->count();
+                            @endphp
                             <tr>
-                                <th>Maître Assistant</th>
-                                <td>128</td>
-                                <td>146</td>
-                                <td>179</td>
-                                <td class="text-red">5000</td>
+                                <th>{{$data->designation}}</th>
+                                <td>{{$udc}}</td>
+                                <td>{{$cndrs}}</td>
+                                <td>{{$inrape}}</td>
+                                <td>{{$non}}</td>
+                                <td class="text-red">{{$udc+$cndrs+$non}}</td>
                             </tr>
-                            <tr>
-                                <th>Maître de conférences</th>
-                                <td>128</td>
-                                <td>146</td>
-                                <td>179</td>
-                                <td class="text-red">5000</td>
-                            </tr>
-                            <tr>
-                                <th>Professeur</th>
-                                <td>128</td>
-                                <td>146</td>
-                                <td>179</td>
-                                <td class="text-red">5000</td>
-                            </tr>
-                          
+                            @endforeach
+                           
                         </tbody>
                     </table>
                 </div>

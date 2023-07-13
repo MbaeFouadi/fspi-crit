@@ -30,7 +30,7 @@
                             
                                 <th>UDC</th>
                                 <th>CNDRS</th>
-                                <th>INRAP</th>
+                                <th>INRAPE</th>
                                 <th>Non affiliés</th>
                                 <th>Total</th>
                             </tr>

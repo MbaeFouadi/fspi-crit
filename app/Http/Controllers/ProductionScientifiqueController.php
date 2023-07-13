@@ -21,10 +21,11 @@ class ProductionScientifiqueController extends Controller
             ->where("user_id", Auth::user()->id)
             ->orderByDesc("id")
             ->first();
+        $statut = 0;
 
         $types = DB::table("type_production_scientifiques")->get();
 
-        return view("add-production", compact("user", "types"));
+        return view("add-production", compact("user", "types", "statut"));
     }
 
     /**
@@ -50,7 +51,7 @@ class ProductionScientifiqueController extends Controller
         ]);
 
         $identite = DB::table("identites")
-            ->where("user_id", Auth::user()->id)
+            ->where("id", $request->id)
             ->orderByDesc("id")
             ->first();
 
@@ -85,7 +86,18 @@ class ProductionScientifiqueController extends Controller
         //         ]);
         // }
 
-        return back()->with("success","Enregistrement effectué avec succès");
+
+        if ($request->statut == 0) {
+            return back()->with("success", "Enregistrement effectué avec succès");
+        } else {
+            $user = DB::table('identites')->where("id", $request->id)->first();
+            $statut = 1;
+            $messages = "Enregistrement effectué avec succès";
+            $types = DB::table("type_production_scientifiques")->get();
+
+
+            return view("add-production", compact("user", "types", "statut", "messages"));
+        }
     }
 
     /**
@@ -118,5 +130,24 @@ class ProductionScientifiqueController extends Controller
     public function destroy(production_scientifique $production_scientifique)
     {
         //
+    }
+
+    public function recherche_production()
+    {
+        return view("recherche_production");
+    }
+
+    public function store_recherche_production(Request $request)
+    {
+
+        $user = DB::table('identites')->where("id", $request->search)->first();
+        $statut = 1;
+        $types = DB::table("type_production_scientifiques")->get();
+
+        if (isset($user)) {
+            return view('add-production', compact("user", "types", "statut"));
+        } else {
+            return back()->with("success", "Ce numéro n'existe pas");
+        }
     }
 }

@@ -24,12 +24,21 @@
                     <h5 class="card-title">Formation supérieure</h5>
                 </div>
                 <div class="card-body">
+
                     <form action="{{route('formations.store')}}" method="post">
                         @csrf
                         <div class="row">
+                            <input type="hidden" value="{{$user->id}}" name="id">
+                            <input type="hidden" value="{{$statut}}" name="statut">
                             @if (session()->has('success'))
                             <div class="alert alert-success">
                                 {{ session()->get('success') }}
+                            </div>
+                            @endif
+
+                            @if(isset($messages))
+                            <div class="alert alert-success">
+                                {{ $messages }}
                             </div>
                             @endif
                             <div class="col-lg-6 col-md-6 col-sm-12">

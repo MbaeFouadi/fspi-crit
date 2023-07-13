@@ -19,7 +19,9 @@ class DomaineCompetenceController extends Controller
         ->where("user_id",Auth::user()->id)
         ->orderByDesc("id")
         ->first();
-        return view("add-domaine-competence",compact("user"));
+
+        $statut=0;
+        return view("add-domaine-competence",compact("user","statut"));
     }
 
     /**
@@ -42,7 +44,7 @@ class DomaineCompetenceController extends Controller
         ]);
 
         $identite=DB::table("identites")
-        ->where("user_id",Auth::user()->id)
+        ->where("id",$request->id)
         ->orderByDesc("id")
         ->first();
 
@@ -55,7 +57,18 @@ class DomaineCompetenceController extends Controller
             ]);
         }
 
+        if($request->statut==0)
+        {
         return back()->with("success","Enregistrement effectué avec succès");
+        }
+        else
+        {
+            $user = DB::table('identites')->where("id", $request->id)->first();
+            $statut=1;
+            $messages="Enregistrement effectué avec succès";
+
+            return view("add-domaine-competence",compact("user","statut","messages"));
+        }
        
     }
 
@@ -89,5 +102,23 @@ class DomaineCompetenceController extends Controller
     public function destroy(domaine_competence $domaine_competence)
     {
         //
+
+    }
+
+    public function recherche_domaine()
+    {
+        return view("recherche_domaine");
+    }
+
+    public function store_recherche_domaine(Request $request)
+    {
+
+        $user = DB::table('identites')->where("id", $request->search)->first();
+        $statut=1;
+        if (isset($user)) {
+            return view('add-domaine-competence', compact("user","statut"));
+        } else {
+            return back()->with("success", "Ce numero n'existe pas");
+        }
     }
 }

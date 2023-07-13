@@ -20,8 +20,9 @@ class PostDocController extends Controller
         ->where("user_id",Auth::user()->id)
         ->orderByDesc("id")
         ->first();
+        $statut=0;
 
-        return view("add-post_doc",compact("user"));
+        return view("add-post_doc",compact("user","statut"));
     }
 
     /**
@@ -62,16 +63,19 @@ class PostDocController extends Controller
 
         ]);
 
-        $post_doc=DB::table("post_docs")
-        ->where("user_id",Auth::user()->id)
-        ->orderByDesc("id")
-        ->first();
-
         $identite=DB::table("identites")
-        ->where("user_id",Auth::user()->id)
+        ->where("id",$request->id)
         ->orderByDesc("id")
         ->first();
 
+        if(isset($identite))
+        {
+            $post_doc=DB::table("post_docs")
+            ->where("user_id",$identite->user_id)
+            ->orderByDesc("id")
+            ->first();
+        }
+     
         if(isset($post_doc) && isset($identite))
         {
             DB::table("identite_post_docs")
@@ -83,7 +87,20 @@ class PostDocController extends Controller
             ]);
         }
 
-        return back()->with("success","Enregistrement effectué avec succès");
+        if($request->statut==0)
+        {
+         return back()->with("success","Enregistrement effectué avec succès");
+
+        }
+        else
+        {
+            $user = DB::table('identites')->where("id", $request->id)->first();
+            $statut=1;
+            $messages="Enregistrement effectué avec succès";
+
+            return view ("add-post_doc",compact("user","statut","messages"));
+        }
+
     }
 
     /**
@@ -116,5 +133,22 @@ class PostDocController extends Controller
     public function destroy(post_doc $post_doc)
     {
         //
+    }
+
+    public function recherche_post_doc()
+    {
+        return view("recherche_post_doc");
+    }
+
+    public function store_recherche_post_doc(Request $request)
+    {
+
+        $user = DB::table('identites')->where("id", $request->search)->first();
+        $statut=1;
+        if (isset($user)) {
+            return view('add-post_doc', compact("user","statut"));
+        } else {
+            return back()->with("success", "Ce numéro n'existe pas");
+        }
     }
 }

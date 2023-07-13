@@ -20,7 +20,9 @@ class ActionRechercheController extends Controller
             ->orderByDesc("id")
             ->first();
 
-        return view("add-action", compact("user"));
+        $statut = 0;
+
+        return view("add-action", compact("user", "statut"));
     }
 
     /**
@@ -59,15 +61,21 @@ class ActionRechercheController extends Controller
 
             ]);
 
-        $action = DB::table("action_recherches")
-            ->where("user_id", Auth::user()->id)
+
+        $identite = DB::table("identites")
+            ->where("id", $request->id)
             ->orderByDesc("id")
             ->first();
 
-        $identite = DB::table("identites")
-            ->where("user_id", Auth::user()->id)
-            ->orderByDesc("id")
-            ->first();
+            if(isset($identite))
+            {
+                $action = DB::table("action_recherches")
+                ->where("user_id", $identite->user_id)
+                ->orderByDesc("id")
+                ->first();
+            }
+           
+       
 
         if (isset($action) && isset($identite)) {
             DB::table("identite_action_recherches")
@@ -79,7 +87,15 @@ class ActionRechercheController extends Controller
                 ]);
         }
 
-        return back()->with("success","Enregistrement effectué avec succès");
+        if ($request->statut == 0) {
+            return back()->with("success", "Enregistrement effectué avec succès");
+        } else {
+            $user = DB::table('identites')->where("id", $request->id)->first();
+            $statut = 1;
+            $messages = "Enregistrement effectué avec succès";
+
+            return view("add-action", compact("user", "statut", "messages"));
+        }
     }
 
     /**
@@ -112,5 +128,22 @@ class ActionRechercheController extends Controller
     public function destroy(action_recherche $action_recherche)
     {
         //
+    }
+
+    public function recherche_action()
+    {
+        return view("recherche_action");
+    }
+
+    public function store_recherche_action(Request $request)
+    {
+
+        $user = DB::table('identites')->where("id", $request->search)->first();
+        $statut=1;
+        if (isset($user)) {
+            return view('add-action', compact("user","statut"));
+        } else {
+            return back()->with("success", "Ce numero n'existe pas");
+        }
     }
 }

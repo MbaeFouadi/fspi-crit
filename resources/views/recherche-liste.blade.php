@@ -34,10 +34,21 @@
                             </div>
                             @endif
                         <div class="row">
-                           
-                            <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label class="form-label">Etablissement</label>
+                                    <label class="form-label">Iles</label>
+                                    <select name="ile" class="form-control" id="">
+                                        <option value="">Séléctionner</option>
+                                        @foreach ($iles as $ile )
+                                        <option value="{{$ile->id}}">{{$ile->designation}}</option>
+                                        @endforeach
+                                       
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label class="form-label">Etablissements</label>
                                     <select name="etablissement" class="form-control" id="">
                                         <option value="">Séléctionner</option>
                                         @foreach ($etablissements as $etablissement )
@@ -47,9 +58,9 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label class="form-label">Profession</label>
+                                    <label class="form-label">Professiosn</label>
                                     <select class="form-control" name="profession" id="">
 
                                         <option value="">Sélectionner</option>

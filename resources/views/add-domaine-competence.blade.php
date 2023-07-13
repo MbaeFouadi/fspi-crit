@@ -27,24 +27,31 @@
                     <form action="{{route('domaines.store')}}" method="post">
                         @csrf
                         @if (session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                        @endif
+                        @if(isset($messages))
                             <div class="alert alert-success">
-                                {{ session()->get('success') }}
+                                {{ $messages }}
                             </div>
                             @endif
+                        <input type="hidden" value="{{$user->id}}" name="id">
+                        <input type="hidden" value="{{$statut}}" name="statut">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12">
-                            @error('domaine')
+                                @error('domaine')
                                 <div class="alert alert-warning">{{$message}}</div>
                                 @enderror
                                 <div class="form-group">
                                     <label class="form-label">Domaines de compétence</label>
                                     <textarea name="domaine" id="" cols="30" rows="10">
-                                        
+
                                     </textarea>
                                 </div>
                             </div>
-                         
-                           
+
+
                         </div>
                         <input type="submit" value="Valider" class="btn btn-primary">
                         <a href="{{route('post-doc.index')}}" class="btn btn-warning">Suivant</a>

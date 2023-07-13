@@ -91,4 +91,51 @@ Route::middleware('auth')->group(function () {
     Route::resource("action-de-recherche",ActionRechercheController::class);
     Route::resource("production-scientifique",ProductionScientifiqueController::class);
 
+    Route::get('recherche-formation', [FormationController::class, 'recherche_formation'])
+    ->name('recherche-formation');
+
+    Route::post('add-formation', [FormationController::class, 'add_formation'])
+    ->name('add-formation');
+
+    Route::post('recherche-formation', [FormationController::class, 'store_recherche_formation'])
+    ->name('store-recherche-formation');
+
+    Route::get('recherche-domaine', [DomaineCompetenceController::class, 'recherche_domaine'])
+    ->name('recherche-domaine');
+
+    Route::post('recherche-domaine', [DomaineCompetenceController::class, 'store_recherche_domaine'])
+    ->name('store-recherche-domaine');
+
+    Route::get('recherche-post-doc', [PostDocController::class, 'recherche_post_doc'])
+    ->name('recherche-post-doc');
+
+    Route::post('recherche-post-doc', [PostDocController::class, 'store_recherche_post_doc'])
+    ->name('store-recherche-post-doc');
+
+    
+
+    Route::get('recherche-axe-recherche', [AxeRechercheController::class, 'recherche_axe_recherche'])
+    ->name('recherche-axe-recherche');
+
+    Route::post('recherche-axe-recherche', [AxeRechercheController::class, 'store_recherche_axe_recherche'])
+    ->name('store-recherche-axe-recherche');
+
+    Route::get('recherche-projet-tutore', [ProjetTutoreController::class, 'recherche_projet_tutore'])
+    ->name('recherche-projet-tutore');
+
+    Route::post('recherche-projet-tutore', [ProjetTutoreController::class, 'store_recherche_projet_tutore'])
+    ->name('store-recherche-projet-tutore');
+
+    Route::get('recherche-action', [ActionRechercheController::class, 'recherche_action'])
+    ->name('recherche-action');
+
+    Route::post('recherche-action', [ActionRechercheController::class, 'store_recherche_action'])
+    ->name('store_recherche-action');
+
+    Route::get('recherche-production', [ProductionScientifiqueController::class, 'recherche_production'])
+    ->name('recherche-production');
+
+    Route::post('recherche-production', [ProductionScientifiqueController::class, 'store_recherche_production'])
+    ->name('store-recherche-production');
+
 });

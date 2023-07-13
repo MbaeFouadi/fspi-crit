@@ -31,6 +31,14 @@
                             {{ session()->get('success') }}
                         </div>
                         @endif
+
+                        @if(isset($messages))
+                        <div class="alert alert-success">
+                            {{ $messages }}
+                        </div>
+                        @endif
+                        <input type="hidden" value="{{$user->id}}" name="id">
+                        <input type="hidden" value="{{$statut}}" name="statut">
                         <div class="row">
 
                             <div class="col-lg-6 col-md-6 col-sm-12">

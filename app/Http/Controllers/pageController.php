@@ -83,39 +83,47 @@ class pageController extends Controller
     {
 
         $etablissements = DB::table("etablissements")
-     
-        ->get();
+            ->get();
 
         $professions = DB::table("professions")
             ->get();
-        return view("recherche-liste", compact("etablissements", "professions"));
+
+        $iles = DB::table("iles")
+            ->get();
+        return view("recherche-liste", compact("etablissements", "professions", "iles"));
     }
 
     public function statistique_etablissement()
     {
 
-        $udc=DB::table("identites")
-        ->where("etablissement_id",1)
-        ->count();
+        $udc = DB::table("identites")
+            ->where("etablissement_id", 1)
+            ->count();
 
-        $cndrs=DB::table("identites")
-        ->where("etablissement_id",2)
-        ->count();
+        $cndrs = DB::table("identites")
+            ->where("etablissement_id", 2)
+            ->count();
 
-        $inrap=DB::table("identites")
-        ->where("etablissement_id",3)
-        ->count();
+        $inrap = DB::table("identites")
+            ->where("etablissement_id", 3)
+            ->count();
 
-        $non=DB::table("identites")
-        ->where("etablissement_id",0)
-        ->count();
+        $non = DB::table("identites")
+            ->where("etablissement_id",100000)
+            ->count();
 
-        return view("statistique-etablissement",compact("udc","cndrs","inrap","non"));
+        return view("statistique-etablissement", compact("udc", "cndrs", "inrap", "non"));
     }
 
     public function statistique_profession()
     {
-        return view("statistique-profession");
+
+        $datas=DB::table("identites")
+        ->join("professions","identites.profession_id","professions.id")
+        ->distinct()
+        ->select("professions.designation as designation","professions.id as id")
+        ->get();
+        return view("statistique-profession",compact("datas"));
     }
 
     public function add_grade()
@@ -201,7 +209,62 @@ class pageController extends Controller
 
     public function store_recherche_liste(Request $request)
     {
-        if (isset($request->etablissement)) {
+
+        if(isset($request->ile) && empty($request->etablissement) && empty($request->profession))
+        {
+            
+            $datas = DB::table("identites")
+                ->join("etablissements", "etablissements.id", "identites.etablissement_id")
+                ->join("professions", "professions.id", "identites.profession_id")
+                ->select("identites.*", "etablissements.code as etablissement", "professions.designation as profession")
+                ->where("identites.ile_id", $request->ile)
+                ->get();
+
+            if (count($datas) > 0) {
+                return view("liste", compact("datas"));
+            } else {
+                return back()->with("error", "Il n'y pas eu d'enregistrement");
+            }
+        }
+
+        if(isset($request->ile) && isset($request->profession) && empty($request->etablissement) )
+        {
+            
+            $datas = DB::table("identites")
+                ->join("etablissements", "etablissements.id", "identites.etablissement_id")
+                ->join("professions", "professions.id", "identites.profession_id")
+                ->select("identites.*", "etablissements.code as etablissement", "professions.designation as profession")
+                ->where("identites.ile_id", $request->ile)
+                ->where("profession_id", $request->profession)
+                ->get();
+
+            if (count($datas) > 0) {
+                return view("liste", compact("datas"));
+            } else {
+                return back()->with("error", "Il n'y pas eu d'enregistrement");
+            }
+        }
+
+        if(isset($request->ile) && isset($request->etablissement) && empty($request->profession))
+        {
+            
+            $datas = DB::table("identites")
+                ->join("etablissements", "etablissements.id", "identites.etablissement_id")
+                ->join("professions", "professions.id", "identites.profession_id")
+                ->select("identites.*", "etablissements.code as etablissement", "professions.designation as profession")
+                ->where("identites.ile_id", $request->ile)
+                ->where("identites.etablissement_id", $request->etablissement)
+                ->get();
+
+            if (count($datas) > 0) {
+                return view("liste", compact("datas"));
+            } else {
+                return back()->with("error", "Il n'y pas eu d'enregistrement");
+            }
+        }
+
+
+        if (isset($request->etablissement) && empty($request->$request->ile) && empty($request->profession))  {
 
             $datas = DB::table("identites")
                 ->join("etablissements", "etablissements.id", "identites.etablissement_id")
@@ -217,8 +280,8 @@ class pageController extends Controller
             }
         }
 
-
-        if (isset($request->profession)) {
+       
+        if (isset($request->profession) && empty($request->$request->ile) && empty($request->etablissement)) {
 
             $datas = DB::table("identites")
                 ->join("etablissements", "etablissements.id", "identites.etablissement_id")
@@ -234,14 +297,35 @@ class pageController extends Controller
             }
         }
 
-        if (isset($request->etablissement) && isset($request->profession)) {
+        
+        if (isset($request->etablissement) && isset($request->profession) && empty($request->$request->ile)) {
 
             $datas = DB::table("identites")
                 ->join("etablissements", "etablissements.id", "identites.etablissement_id")
                 ->join("professions", "professions.id", "identites.profession_id")
-                ->select("identites.*", "etablissements.code as etablissement", "professions.designation as profession")
-                ->where("profession_id", $request->profession)
+                ->where("identites.profession_id", $request->profession)
                 ->where("identites.etablissement_id", $request->etablissement)
+                ->select("identites.*", "etablissements.code as etablissement", "professions.designation as profession")
+                ->get();
+
+              
+
+            if (count($datas) > 0) {
+                return view("liste", compact("datas"));
+            } else {
+                return back()->with("error", "Il n'y pas eu d'enregistrement");
+            }
+        }
+
+        if (isset($request->ile) && isset($request->etablissement) && isset($request->profession)) 
+        {
+            $datas = DB::table("identites")
+                ->join("etablissements", "etablissements.id", "identites.etablissement_id")
+                ->join("professions", "professions.id", "identites.profession_id")
+                ->select("identites.*", "etablissements.code as etablissement", "professions.designation as profession")
+                ->where("identites.ile_id", $request->ile)
+                ->where("identites.etablissement_id", $request->etablissement)
+                ->where("profession_id", $request->profession)
                 ->get();
 
             if (count($datas) > 0) {

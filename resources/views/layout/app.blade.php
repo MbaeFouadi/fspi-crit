@@ -254,13 +254,13 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{route('identite.index')}}">Coordonnées et références</a></li>
-                            <li><a href="{{route('formations.index')}}">Formations</a></li>
-                            <li><a href="{{route('domaines.index')}}">Domaines de compétences</a></li>
-                            <li><a href="{{route('post-doc.index')}}">Post-doc</a></li>
-                            <li><a href="{{route('axe-de-recherche.index')}}">Axes de Recherches</a></li>
-                            <li><a href="{{route('projet_tutore.index')}}">Projet tutoré</a></li>
-                            <li><a href="{{route('action-de-recherche.index')}}">Actions de Recherche</a></li>
-                            <li><a href="{{route('production-scientifique.index')}}">Productions scientifiques</a></li>
+                            <li><a href="{{route('recherche-formation')}}">Formations</a></li>
+                            <li><a href="{{route('recherche-domaine')}}">Domaines de compétences</a></li>
+                            <li><a href="{{route('recherche-post-doc')}}">Post-doc</a></li>
+                            <li><a href="{{route('recherche-axe-recherche')}}">Axes de Recherches</a></li>
+                            <li><a href="{{route('recherche-projet-tutore')}}">Projet tutoré</a></li>
+                            <li><a href="{{route('recherche-action')}}">Actions de Recherche</a></li>
+                            <li><a href="{{route('recherche-production')}}">Productions scientifiques</a></li>
                         </ul>
                     </li>
                     <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">
